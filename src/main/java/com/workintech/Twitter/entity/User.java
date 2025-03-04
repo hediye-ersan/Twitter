@@ -34,6 +34,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Tweet> tweets;
 
+    //kullanıcının attığı yorumları listeleyebilir
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    //Kullanıcının attığı retweetleri listeleyebilir
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Retweet> retweets;
+
 
 
 }

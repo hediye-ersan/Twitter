@@ -27,7 +27,7 @@ public class Like {
     private Tweet tweet;
 
     //Bir kullanıcının birden çok like'ı vardır.
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 

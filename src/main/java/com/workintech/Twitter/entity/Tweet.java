@@ -27,7 +27,7 @@ public class Tweet {
     private String text;
 
     //Bir kullanıcı tarafından bir çok tweet atılabilir.
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
