@@ -18,9 +18,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "user_id")
     @NotNull
-    @NotBlank
     private Long id;
 
     @NotNull
@@ -31,6 +30,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    //Bir kullanıcı tarafından bir çok tweet atılabilir
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Tweet> tweets;
 
