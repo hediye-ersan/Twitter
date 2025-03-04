@@ -1,10 +1,13 @@
 package com.workintech.Twitter.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,8 +15,25 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users", schema = "twitter")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @NotNull
+    @NotBlank
+    private Long id;
+
+    @NotNull
+    @Column(name = "user_name")
     private String username;
+
+    @NotNull
+    @Column(name = "password")
     private String password;
-    private String email;
-    private String name;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Tweet> tweets;
+
+
+
 }
