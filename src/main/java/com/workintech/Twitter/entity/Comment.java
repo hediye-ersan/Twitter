@@ -15,11 +15,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
-    @NotBlank
     @Column(name = "comment_id")
     private Long id;
 
-    @NotNull
     @NotBlank
     @Column(name = "content")
     private String content;

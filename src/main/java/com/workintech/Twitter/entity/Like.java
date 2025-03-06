@@ -31,4 +31,5 @@ public class Like {
     @JoinColumn(name = "user_id")
     private User user;
 
+
 }

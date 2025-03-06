@@ -31,8 +31,8 @@ public class Tweet {
     @JoinColumn(name = "user_id")
     private User user;
 
-    //Bir tweetin beğeni sayısını öğrenmek için bu ilişki kuruldu.
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL)
+    //Bir tweetin beğeni sayısını öğrenmek için bu ilişki kuruldu, birden çok beğenisi olabilir
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Like> likes;
 
     //Beğeni sayısı tutar
@@ -40,11 +40,11 @@ public class Tweet {
     private int likeCount;
 
     //bir tweetin birden çok yorumu olabilir
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     //Bir tweet birden çok retweet olabilir
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Retweet> retweets;
 
 
