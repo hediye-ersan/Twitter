@@ -19,7 +19,6 @@ public class Tweet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tweet_id")
     @NotNull
-
     private Long id;
 
     @NotBlank
