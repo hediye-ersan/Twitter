@@ -8,6 +8,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     //Kullanıcı adına göre kullanıcıyı bulmasını sağlar
-    @Query("SELECT u FROM User u WHERE u.username = username")
+    @Query("SELECT u FROM User u WHERE u.username = :username")
     User findByUsername(String username);
 }
