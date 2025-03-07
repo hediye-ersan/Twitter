@@ -11,19 +11,10 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    //Bir Tweetin tüm yorumlarını listeler
-    @Query("SELECT c FROM Comment c WHERE c.tweet.id = :tweetId")
-    List<Comment> findAllByTweetId(Long tweetId);
-
-
-    //Kullanıcının yorumu bulmasını sağlar
-    @Query("SELECT c FROM Comment c WHERE c.id = :commentId AND c.user.id = :userId")
+    List<Comment> findByTweetId(Long tweetId);
     Optional<Comment> findByIdAndUserId(Long commentId, Long userId);
-
-
-    //Yorum sahibi veya tweet sahibinin yorumu silebilmesini sağlar
     @Modifying
-    @Transactional
     @Query("DELETE FROM Comment c WHERE c.id = :commentId AND (c.user.id = :userId OR c.tweet.user.id = :tweetOwnerId)")
-    void deleteByIdAndUserOrTweetOwner(Long commentId, Long userId, Long tweetOwnerId);
+    void deleteByCommentIdAndUserIdOrTweetOwnerId(Long commentId, Long userId, Long tweetOwnerId);
+
 }
