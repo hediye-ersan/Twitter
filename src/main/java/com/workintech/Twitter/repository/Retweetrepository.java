@@ -11,4 +11,8 @@ public interface Retweetrepository extends JpaRepository<Retweet, Long> {
     //Kullanıcının bir tweeti retweet edip etmediğini kontrol etmesini sağlar
     @Query("SELECT r FROM Retweet r WHERE r.user.id = :userId AND r.tweet.id = :tweetId")
     Optional<Retweet> findByUserAndTweet(Long userId, Long tweetId);
+
+    //Tweetin kaç retweet aldığını sayar
+    @Query("SELECT COUNT(r) FROM Retweet r WHERE r.tweet.id = :tweetId")
+    Long countByTweetId(Long tweetId);
 }

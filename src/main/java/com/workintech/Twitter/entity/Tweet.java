@@ -21,8 +21,7 @@ public class Tweet {
     @Column(name = "tweet_id")
     private Long id;
 
-    @NotBlank
-    @NotBlank
+    @NotBlank(message = "Tweet metni boş olamaz.")
     @Size(max = 280, message = "Tweet 280 karakterden fazla olamaz.")
     @Column(name = "text")
     private String text;
@@ -47,6 +46,10 @@ public class Tweet {
     //Bir tweet birden çok retweet olabilir
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Retweet> retweets;
+
+    //Retweet sayısını tutar
+    @Column(name = "retweet_count")
+    private int retweetCount;
 
 
 

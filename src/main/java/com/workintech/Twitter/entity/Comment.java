@@ -20,7 +20,7 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Yorum boş olamaz.")
     @Column(name = "content")
     private String content;
 

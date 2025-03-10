@@ -4,6 +4,7 @@ import com.workintech.Twitter.dto.RegisterResponse;
 import com.workintech.Twitter.entity.User;
 import com.workintech.Twitter.services.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> registerUser(@RequestBody User user) {
+    public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Şifreyi hash'le
         User createdUser = userService.save(user);
 
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
+    public ResponseEntity<String> loginUser(@Valid @RequestBody User user) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())

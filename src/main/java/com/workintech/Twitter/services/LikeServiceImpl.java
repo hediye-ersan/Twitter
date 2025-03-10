@@ -6,6 +6,7 @@ import com.workintech.Twitter.entity.User;
 import com.workintech.Twitter.repository.LikeRepository;
 import com.workintech.Twitter.repository.TweetRepository;
 import com.workintech.Twitter.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,14 +26,15 @@ public class LikeServiceImpl implements LikeService{
     @Transactional
     public void likeTweet(Long userId, Long tweetId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User  not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + userId + " not found"));
+
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new IllegalArgumentException("Tweet not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Tweet with ID " + tweetId + " not found"));
 
         Optional<Like> existingLike = likeRepository.findByUserAndTweet(user, tweet);
 
         if (existingLike.isPresent()) {
-            throw new IllegalArgumentException("User  already liked this tweet");
+            throw new IllegalArgumentException("User with ID " + userId + " already liked this tweet with ID " + tweetId);
         }
 
         Like like = new Like();
@@ -43,6 +45,7 @@ public class LikeServiceImpl implements LikeService{
         //Like sayısını günceller
         tweet.setLikeCount(tweet.getLikeCount() + 1);
         tweetRepository.save(tweet);  //Güncellenmiş tweet'i kaydeder
+
     }
 
 
@@ -50,14 +53,15 @@ public class LikeServiceImpl implements LikeService{
     @Transactional
     public void dislikeTweet(Long userId, Long tweetId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + userId + " not found"));
+
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new IllegalArgumentException("Tweet not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Tweet with ID " + tweetId + " not found"));
 
         Optional<Like> existingLike = likeRepository.findByUserAndTweet(user, tweet);
 
         if (existingLike.isEmpty()) {
-            throw new IllegalArgumentException("User hasn't liked this tweet yet");
+            throw new IllegalArgumentException("User with ID " + userId + " hasn't liked this tweet with ID " + tweetId);
         }
 
         likeRepository.deleteByUserAndTweet(user, tweet);
