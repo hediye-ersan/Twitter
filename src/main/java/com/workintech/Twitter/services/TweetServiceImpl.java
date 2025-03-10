@@ -1,7 +1,9 @@
 package com.workintech.Twitter.services;
 
 import com.workintech.Twitter.entity.Tweet;
+import com.workintech.Twitter.entity.User;
 import com.workintech.Twitter.repository.TweetRepository;
+import com.workintech.Twitter.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,20 +15,24 @@ import java.util.Optional;
 public class TweetServiceImpl implements TweetService {
 
     private final TweetRepository tweetRepository;
+    private final UserRepository userRepository;
 
 
     @Override
-    public Tweet createTweet(Tweet tweet) {
-        if (tweet.getUser() == null) {
-            throw new IllegalArgumentException("Tweet bir kullanıcıya ait olmalıdır.");
-        }
-        tweet.setLikeCount(0);  // Yeni bir tweet oluşturulurken beğeni sayısını sıfırlayalım.
+    public Tweet createTweet(Long userId, Tweet tweet) {
+        // Kullanıcıyı bul
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Kullanıcıyı tweet'e ekle
+        tweet.setUser(user);
+
         return tweetRepository.save(tweet);
     }
 
     @Override
     public List<Tweet> getAllTweetsByUserId(Long userId) {
-        return tweetRepository.findAllByUserId(userId);
+        return tweetRepository.findByUserId(userId);
     }
 
     @Override
@@ -36,33 +42,28 @@ public class TweetServiceImpl implements TweetService {
 
     @Override
     public Tweet updateTweet(Long id, Tweet updatedTweet, Long userId) {
-        Optional<Tweet> tweetOptional = tweetRepository.findById(id);
-        if(tweetOptional.isPresent()){
-            Tweet tweet = tweetOptional.get();
-            if (!tweet.getUser().getId().equals(userId)) {
-                throw new IllegalArgumentException("Sadece tweet sahibi tweeti güncelleyebilir.");
-            }
-            tweet.setText(updatedTweet.getText());
+        Tweet tweet = tweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tweet not found"));
 
-            return tweetRepository.save(tweet);
-        } else {
-            throw new IllegalArgumentException("Tweet bulunamadı.");
-
+        // Tweet'in sahibi kontrol ediliyor
+        if (!tweet.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
         }
+
+        tweet.setText(updatedTweet.getText());
+        return tweetRepository.save(tweet);
     }
 
     @Override
     public void deleteTweet(Long id, Long userId) {
-        Optional<Tweet> tweetOptional = tweetRepository.findById(id);
-        if (tweetOptional.isPresent()){
-            Tweet tweet = tweetOptional.get();
-            if (!tweet.getUser().getId().equals(userId)) {
-                throw new IllegalArgumentException("Sadece tweet sahibi tweeti silebilir.");
-            }
-            tweetRepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("Tweet bulunamadı.");
+        Tweet tweet = tweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tweet not found"));
+
+        // Tweet'in sahibi mi kontrol et
+        if (!tweet.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
         }
 
+        tweetRepository.delete(tweet);
     }
 }

@@ -12,25 +12,25 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/tweet")
+@RequestMapping("/tweets")
 public class TweetController {
 
     private final TweetService tweetService;
 
     @PostMapping//Yeni bir tweet oluşturuyoruz.
-    public ResponseEntity<Tweet> createTweet(@RequestBody Tweet tweet) {
-        Tweet createdTweet = tweetService.createTweet(tweet);
+    public ResponseEntity<Tweet> createTweet(@PathVariable Long id, @RequestBody Tweet tweet) {
+        Tweet createdTweet = tweetService.createTweet(id, tweet);
         return new ResponseEntity<>(createdTweet, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{findByUserId}")//Bu satırda kullanıcıya ait tüm tweetler getiriliyor.
+    @GetMapping("/user/{userId}")//Bu satırda kullanıcıya ait tüm tweetler getiriliyor.
     public ResponseEntity<List<Tweet>> getAllTweetsByUserId(@PathVariable Long userId) {
         List<Tweet> tweets = tweetService.getAllTweetsByUserId(userId);
         return ResponseEntity.ok(tweets);
     }
 
-    @GetMapping("/findById")//Bu satırda tweet id'sine göre tweet getiriliyor.
-    public ResponseEntity<Tweet> getTweetById(@RequestParam Long id) {
+    @GetMapping("/{id}")//Bu satırda tweet id'sine göre tweet getiriliyor.
+    public ResponseEntity<Tweet> getTweetById(@PathVariable Long id) {
         Optional<Tweet> tweet = tweetService.getTweetById(id);
         return tweet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }

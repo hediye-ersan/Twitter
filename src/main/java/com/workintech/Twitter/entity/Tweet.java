@@ -3,6 +3,7 @@ package com.workintech.Twitter.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,11 @@ public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tweet_id")
-    @NotNull
     private Long id;
 
     @NotBlank
+    @NotBlank
+    @Size(max = 280, message = "Tweet 280 karakterden fazla olamaz.")
     @Column(name = "text")
     private String text;
 
