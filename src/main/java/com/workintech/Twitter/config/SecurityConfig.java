@@ -27,12 +27,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable()) // CSRF'yi kapatalım (sadece test için)
+        http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/register", "/user/login").permitAll() // Kayıt ve login serbest
-                        .anyRequest().authenticated()) // Diğer her şey giriş gerektirir
-                .httpBasic(Customizer.withDefaults()); // Basic Auth aktif
+                        .requestMatchers("/user/register", "/user/login").permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults()) // Basic Auth'u aktif ediyoruz
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless yapıyı sürdürüyoruz
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }

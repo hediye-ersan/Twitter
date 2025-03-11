@@ -36,15 +36,15 @@ public class User implements UserDetails {
     private String password;
 
     //Bir kullanıcı tarafından bir çok tweet atılabilir
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Tweet> tweets;
 
     //kullanıcının attığı yorumları listeleyebilir
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     //Kullanıcının attığı retweetleri listeleyebilir
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Retweet> retweets;
 
 
