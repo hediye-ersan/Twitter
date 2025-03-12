@@ -62,6 +62,7 @@ public class TweetController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Tüm tweet'leri getirir
     @GetMapping
     public ResponseEntity<List<TweetResponse>> getAllTweets() {
         List<Tweet> tweets = tweetService.getAllTweets();

@@ -13,7 +13,13 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode
 @Entity
-@Table(name = "likes", schema = "twitter")
+@Table(name = "likes", schema = "twitter", uniqueConstraints = {
+        @UniqueConstraint( // Unique constraint tanımlanıyor
+                name = "unique_user_tweet", // Constraint adı
+                columnNames = {"user_id", "tweet_id"} // Benzersiz olacak kolonlar
+        )
+}
+)
 //Her bir like için user bir tweeti sadece bir kez beğenebilir.
 public class Like {
     @Id

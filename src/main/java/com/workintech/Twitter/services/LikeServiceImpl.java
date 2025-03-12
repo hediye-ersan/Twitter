@@ -32,6 +32,8 @@ public class LikeServiceImpl implements LikeService{
                 .orElseThrow(() -> new EntityNotFoundException("Tweet with ID " + tweetId + " not found"));
 
         Optional<Like> existingLike = likeRepository.findByUserAndTweet(userId, tweetId);
+        System.out.println("Checking Like for userId: " + userId + " and tweetId: " + tweetId);
+        System.out.println("Existing Like Found: " + existingLike.orElse(null));
 
         if (existingLike.isPresent()) {
             throw new IllegalArgumentException("User has already liked this tweet");
