@@ -31,11 +31,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user/register", "/user/login").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults()) // Basic Auth'u aktif ediyoruz
+                .httpBasic(Customizer.withDefaults()) // Basic auth kullanıyorsanız
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless yapıyı sürdürüyoruz
-                .logout(logout -> logout.permitAll());
-
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)); // Her istekte session oluşturulur
         return http.build();
     }
 

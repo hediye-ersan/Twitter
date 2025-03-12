@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TweetService {
-
+  //Kullanıcıların tüm tweetlerini getirir
+  List<Tweet> getAllTweets();
   Tweet createTweet(Long userID, Tweet tweet);
   List<Tweet> getAllTweetsByUserId(Long userId);
   Optional<Tweet> getTweetById(Long id);

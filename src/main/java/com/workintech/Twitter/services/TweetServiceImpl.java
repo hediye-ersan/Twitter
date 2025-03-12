@@ -19,6 +19,11 @@ public class TweetServiceImpl implements TweetService {
 
 
     @Override
+    public List<Tweet> getAllTweets() {
+        return tweetRepository.findAll();
+    }
+
+    @Override
     public Tweet createTweet(Long userId, Tweet tweet) {
         // Kullanıcıyı bul
         User user = userRepository.findById(userId)
@@ -30,15 +35,19 @@ public class TweetServiceImpl implements TweetService {
         return tweetRepository.save(tweet);
     }
 
+    // Kullanıcı id'sine göre tüm tweet'leri getirilir
     @Override
     public List<Tweet> getAllTweetsByUserId(Long userId) {
         return tweetRepository.findByUserId(userId);
     }
 
+    // Tweet id'sine göre tweet getirilir
     @Override
     public Optional<Tweet> getTweetById(Long id) {
         return tweetRepository.findById(id);
     }
+
+
 
     @Override
     public Tweet updateTweet(Long id, Tweet updatedTweet, Long userId) {

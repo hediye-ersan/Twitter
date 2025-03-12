@@ -4,15 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "tweets", schema = "twitter")
 public class Tweet {
@@ -32,7 +31,7 @@ public class Tweet {
     private User user;
 
     //Bir tweetin beğeni sayısını öğrenmek için bu ilişki kuruldu, birden çok beğenisi olabilir
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Like> likes;
 
     //Beğeni sayısı tutar
@@ -40,16 +39,21 @@ public class Tweet {
     private int likeCount;
 
     //bir tweetin birden çok yorumu olabilir
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     //Bir tweet birden çok retweet olabilir
-    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Retweet> retweets;
 
     //Retweet sayısını tutar
     @Column(name = "retweet_count")
     private int retweetCount;
+
+    @Override
+    public String toString() {
+        return "Tweet{id=" + id + ", text='" + text + "'}";
+    }
 
 
 

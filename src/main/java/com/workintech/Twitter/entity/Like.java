@@ -5,13 +5,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode
 @Entity
-@Table(name = "likes", schema = "twitter", uniqueConstraints = @UniqueConstraint(columnNames = {"tweet_id", "user_id"}))
+@Table(name = "likes", schema = "twitter")
 //Her bir like için user bir tweeti sadece bir kez beğenebilir.
 public class Like {
     @Id

@@ -15,6 +15,7 @@ public class LikeController {
 
     @PostMapping("/{userId}/{tweetId}")
     public ResponseEntity<String> likeTweet(@PathVariable Long userId, @PathVariable Long tweetId) {
+        System.out.println("Authenticated User: " + userId);
         try {
             likeService.likeTweet(userId, tweetId);
             return ResponseEntity.ok("Tweet liked successfully");

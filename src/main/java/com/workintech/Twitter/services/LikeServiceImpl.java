@@ -31,10 +31,10 @@ public class LikeServiceImpl implements LikeService{
         Tweet tweet = tweetRepository.findById(tweetId)
                 .orElseThrow(() -> new EntityNotFoundException("Tweet with ID " + tweetId + " not found"));
 
-        Optional<Like> existingLike = likeRepository.findByUserAndTweet(user, tweet);
+        Optional<Like> existingLike = likeRepository.findByUserAndTweet(userId, tweetId);
 
         if (existingLike.isPresent()) {
-            throw new IllegalArgumentException("User with ID " + userId + " already liked this tweet with ID " + tweetId);
+            throw new IllegalArgumentException("User has already liked this tweet");
         }
 
         Like like = new Like();
@@ -58,13 +58,14 @@ public class LikeServiceImpl implements LikeService{
         Tweet tweet = tweetRepository.findById(tweetId)
                 .orElseThrow(() -> new EntityNotFoundException("Tweet with ID " + tweetId + " not found"));
 
-        Optional<Like> existingLike = likeRepository.findByUserAndTweet(user, tweet);
+        Optional<Like> existingLike = likeRepository.findByUserAndTweet(user.getId(), tweet.getId());
+
 
         if (existingLike.isEmpty()) {
             throw new IllegalArgumentException("User with ID " + userId + " hasn't liked this tweet with ID " + tweetId);
         }
 
-        likeRepository.deleteByUserAndTweet(user, tweet);
+        likeRepository.deleteByUserAndTweet(userId, tweetId);
 
         //Like sayısını günceller
         tweet.setLikeCount(tweet.getLikeCount() - 1);

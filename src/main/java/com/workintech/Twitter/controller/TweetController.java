@@ -2,11 +2,13 @@ package com.workintech.Twitter.controller;
 
 import com.workintech.Twitter.dto.TweetResponse;
 import com.workintech.Twitter.entity.Tweet;
+import com.workintech.Twitter.entity.User;
 import com.workintech.Twitter.services.TweetService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +23,25 @@ public class TweetController {
     private final TweetService tweetService;
 
     // Tweet oluşturulur
-    @PostMapping("/users/{userId}")
-    public ResponseEntity<TweetResponse> createTweet(@PathVariable Long userId, @Valid @RequestBody Tweet tweet) {
+    @PostMapping("/user/{userId}")
+    public ResponseEntity<TweetResponse> createTweet(
+            @PathVariable Long userId,
+            @AuthenticationPrincipal User authenticatedUser,  // Basic Auth’tan gelen kullanıcı
+            @Valid @RequestBody Tweet tweet) {
+
+        // Kullanıcı sadece kendi adına tweet atabilir
+        if (!authenticatedUser.getId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403 Forbidden
+        }
+
         Tweet createdTweet = tweetService.createTweet(userId, tweet);
-        TweetResponse tweetResponse = new TweetResponse(createdTweet.getId(), createdTweet.getText(), createdTweet.getUser().getUsername(), createdTweet.getLikeCount(), createdTweet.getRetweetCount());
+        TweetResponse tweetResponse = new TweetResponse(
+                createdTweet.getId(),
+                createdTweet.getText(),
+                createdTweet.getUser().getUsername(),
+                createdTweet.getLikeCount(),
+                createdTweet.getRetweetCount()
+        );
         return new ResponseEntity<>(tweetResponse, HttpStatus.CREATED);
     }
     // Kullanıcı id'sine göre tüm tweet'leri getirilir
@@ -37,7 +54,7 @@ public class TweetController {
         return ResponseEntity.ok(tweetResponses);
     }
 
-
+    // Tweet id'sine göre tweet getirilir
     @GetMapping("/{id}")
     public ResponseEntity<TweetResponse> getTweetById(@PathVariable Long id) {
         Optional<Tweet> tweet = tweetService.getTweetById(id);
@@ -45,16 +62,25 @@ public class TweetController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TweetResponse> updateTweet(@PathVariable Long id, @RequestBody Tweet updatedTweet, @RequestParam Long userId) {
+    @GetMapping
+    public ResponseEntity<List<TweetResponse>> getAllTweets() {
+        List<Tweet> tweets = tweetService.getAllTweets();
+        List<TweetResponse> tweetResponses = tweets.stream()
+                .map(tweet -> new TweetResponse(tweet.getId(), tweet.getText(), tweet.getUser().getUsername(), tweet.getLikeCount(), tweet.getRetweetCount()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(tweetResponses);
+    }
+
+    @PutMapping("/user/{userId}/tweet/{id}")
+    public ResponseEntity<TweetResponse> updateTweet(@PathVariable Long id, @RequestBody Tweet updatedTweet, @PathVariable Long userId) {
         Tweet tweet = tweetService.updateTweet(id, updatedTweet, userId);
         TweetResponse tweetResponse = new TweetResponse(tweet.getId(), tweet.getText(), tweet.getUser().getUsername(), tweet.getLikeCount(), tweet.getRetweetCount());
         return ResponseEntity.ok(tweetResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTweet(@PathVariable Long id, @RequestParam Long userId) {
-        tweetService.deleteTweet(id, userId);
-        return ResponseEntity.noContent().build();
-    }
+   @DeleteMapping("/user/{userId}/tweet/{id}")
+   public ResponseEntity<String> deleteTweet(@PathVariable Long id, @PathVariable Long userId) {
+       tweetService.deleteTweet(id, userId);
+       return ResponseEntity.ok("Tweet successfully deleted");
+   }
 }

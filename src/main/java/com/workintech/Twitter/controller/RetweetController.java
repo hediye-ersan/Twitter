@@ -13,7 +13,7 @@ public class RetweetController {
 
 
     //Tweet id'si ve kullanıcı id'si ile retweet yapılır
-    @PostMapping
+    @PostMapping("/{userId}/{tweetId}")
     public String retweetTweet(@RequestParam Long userId, @RequestParam Long tweetId) {
         try {
             retweetService.retweet(userId, tweetId);
@@ -24,7 +24,7 @@ public class RetweetController {
     }
 
     //Tweet id'si ve kullanıcı id'si ile retweet kaldırılır
-    @DeleteMapping
+    @DeleteMapping("/unretweet/{userId}/{tweetId}")
     public String unretweetTweet(@RequestParam Long userId,@RequestParam Long tweetId) {
         try {
             retweetService.unretweet(userId, tweetId);
