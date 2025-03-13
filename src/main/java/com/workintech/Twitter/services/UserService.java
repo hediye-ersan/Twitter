@@ -19,7 +19,7 @@ public class UserService implements UserDetailsService {
     public User save(User user) {
         return userRepository.save(user);
     }
-
+    //Kullanıcı adına göre kullanıcıyı bulmasını sağlar
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }

@@ -71,7 +71,7 @@ public class TweetController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(tweetResponses);
     }
-
+    //Tweet güncelleme işlemi yapılırken tweetin sahibi olma durumunu kontrol eder.
     @PutMapping("/user/{userId}/tweet/{id}")
     public ResponseEntity<TweetResponse> updateTweet(@PathVariable Long id, @RequestBody Tweet updatedTweet, @PathVariable Long userId) {
         Tweet tweet = tweetService.updateTweet(id, updatedTweet, userId);
